@@ -38,7 +38,7 @@ const
                         res.status(200).send(record);
                     }
                     if(!err && !success)
-                        res.status(401).send("Invalid Password");
+                        ressaveStudentCb.status(401).send("Invalid Password");
                 }
             }; 
             
@@ -59,27 +59,31 @@ const
     },
 
     registrationCallback = (req, res, next)=> {
-        // console.log(req.body);
+        console.log('req.body: ', req.body);
         let 
-            fullname = req.body.fullname.trim(),
-            email = req.body.department.trim(),
-            contact = req.body.contact,
-            password = req.body.password;
+            fullname = req.body.fullname.trim(), //must contain
+            email = req.body.email.trim(), //must contain
+            contact = req.body.contact, //must contain
+            password = req.body.password; //must contain
             
 
             generateHash(password) // return hash with 10 round salt added
                 .then(hash=> {
-                    let JobSeeker = new JobSeeker({
-                        fullname, contact, email, password
-                    }),
-                    saveStudentCb = err => {
-                        if(err)
-                            res.status(409).send("Account Already Exists");
-
-                        if(!err)
-                            res.status(201).send("Account Created");
+                    console.log(`password-hash ${password}-${hash}`);
+                    const jobSeekerModel = {
+                        fullname, email, contact, password: hash
                     }
-                    JobSeeker.save(saveStudentCb);
+                    console.log('JOB SEEKER: ', jobSeekerModel)
+                    JobSeekerJoint.saveJobSeeker(jobSeekerModel)
+                        .then(res=> {
+                            console.log(`response from save job seeker promise: `,res);
+                        })
+                        .catch(err=> {
+                            if(err.status == 409)
+                                res.status(409).send(err.body)
+                            
+                            res.status(500).send('Unable To Save Job Seeker');
+                        })
                         
                 }).catch(err=>{
                     throw new Error(err)

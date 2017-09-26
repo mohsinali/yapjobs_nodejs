@@ -14,7 +14,7 @@ class DatabaseConnection {
 
     connect(){
         console.log(`ESTABLISHING DATABASE CONNECTION...`);
-        connection_cb = function (err){
+        function connection_cb (err){
             if(err)
                 throw new Error(err);
             if(!err)

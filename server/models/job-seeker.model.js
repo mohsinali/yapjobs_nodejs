@@ -3,7 +3,7 @@ const
     collection = 'job_seekers',
     JobSeekerSchema = mongoose.Schema({
         fullname: { type: String, trim: true },
-        contact: { type: Number },
+        contact: { type: String, trim:true },
         email: { type: String, trim: true },
         created: { type: Date, default: Date.now },
         password: { type: String, required: false } 
