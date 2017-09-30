@@ -4,7 +4,7 @@ const
     bcrypt = require('bcrypt'),
     saltRounds = 10, 
     JobSeekerJoint = require('../joints/job-seekers.joints'),
-    jwt = require('jsonwebtoken'),
+    cryptoUtils = require('../utils/crypto.utils'),
     // promisify = require('util.promisify'),
     generateHash = (password)=>{
         console.log(`password about to encrypt: ${password}`);
@@ -35,13 +35,21 @@ const
                 
                     JobSeekerJoint.checkIfUserExists(req.body.email) 
                         .then(record => {
-                            console.log('record found for email: ', record);
-                            typeof record.body === 'object' ? 
+                            '_id' in record.body ?   
                                 bcrypt.compare(password, record.body.password)
                                     .then( passwordMatched => {
-                                        passwordMatched ?
-                                            res.status(202).send('Access Granted') 
-                                            :
+                                        if(passwordMatched) {
+                                            let {email, password, _id, contact} = record.body;
+                                            console.log(email, _id, contact);
+                                            cryptoUtils.assignStandardJWT({email, _id, contact})
+                                                .then(token => {
+                                                    res.cookie('YAPSESSION', token) ;
+                                                    res.status(202).send({token, body: 'Access Granted'});
+                                                }).catch(err=>{
+                                                    //TODO;
+                                                })
+                                        }
+                                        else 
                                             res.status(401).send('Invalid Password');
                                     })
                                     .catch(err => {
@@ -85,11 +93,20 @@ const
                 }).catch(err=>{
                     throw new Error(err)
                 })
-            
+    },
+    verifyHandler = (req, res, next)=>{
+        // console.log(cryptoUtils.verifyJWT)
+        console.log('req.body.token: ', req.body.token);
+        let verifyJWT = cryptoUtils.verifyJWT(req.body.token);
+        verifyJWT.isTokenValid ?
+            res.status(200).send(verifyJWT.body)
+            :
+            res.status(401).send(verifyJWT.body);
     }
 
 
 router.post('/login', loginHandler);
 router.post('/register', registrationHandler);
+router.post('/verify', verifyHandler);
 
 module.exports = router;
