@@ -4,6 +4,7 @@ const
     bcrypt = require('bcrypt'),
     saltRounds = 10, 
     JobSeekerJoint = require('../joints/job-seekers.joints'),
+    jwt = require('jsonwebtoken'),
     // promisify = require('util.promisify'),
     generateHash = (password)=>{
         console.log(`password about to encrypt: ${password}`);
@@ -13,7 +14,7 @@ const
                 .catch(err => { reject( err ) });
         })
     },
-    loginCallback = (req, res, next)=> {
+    loginHandler = (req, res, next)=> {
         console.log('body: ',req.body);
         
         // should be handled with complete validators.
@@ -57,7 +58,7 @@ const
             }
     },
 
-    registrationCallback = (req, res, next)=> {
+    registrationHandler = (req, res, next)=> {
         let 
             fullname = req.body.fullname.trim(), //must contain
             email = req.body.email.trim(), //must contain
@@ -77,8 +78,8 @@ const
                         .catch(err=> {
                             if(err.status == 409)
                                 res.status(409).send(err.body)
-                            
-                            res.status(500).send('Unable To Save Job Seeker');
+                            else 
+                                res.status(500).send('Unable To Save Job Seeker');
                         })
                         
                 }).catch(err=>{
@@ -88,7 +89,7 @@ const
     }
 
 
-router.post('/login', loginCallback);
-router.post('/register', registrationCallback);
+router.post('/login', loginHandler);
+router.post('/register', registrationHandler);
 
 module.exports = router;
