@@ -6,7 +6,7 @@ class JobSeekerJoint {
         console.log(`JOB SEEKER JOINT INVOKED @${Date.now()}`);
     }
 
-    checkIfUserExsits(email){
+    checkIfUserExists(email){
         const responseParams= {
                 __v: false,
                 created: false,
@@ -14,12 +14,12 @@ class JobSeekerJoint {
             };
 
         return new Promise((resolve, reject) => {
-            JobSeeker.findOne({email}, responseParams)
-                .then(body=>{ 
-                    Object.keys(body).length ? 
-                        resolve({status: 404, body: 'NOT_FOUND'})
+            JobSeeker.findOne({email: email}, responseParams)
+                .then(body=>{
+                    '_id' in body ? 
+                        resolve({status: 200, body })
                         :
-                        resolve({status: 302, body: res })
+                        resolve({status: 404, body: 'NOT_FOUND'})
                  })
                 .catch(err => { reject (err) })
         });
@@ -27,8 +27,8 @@ class JobSeekerJoint {
 
     saveJobSeeker(jobSeekerModel){
         const jobSeeker = new JobSeeker(jobSeekerModel);
-        console.log('job seeker: ', jobSeeker)
-        console.log('job seeker model: ', jobSeekerModel)
+        // console.log('job seeker: ', jobSeeker)
+        // console.log('job seeker model: ', jobSeekerModel)
         return new Promise((resolve, reject) => {
             let saveStudentCb = err=> {
                 err ?
