@@ -95,18 +95,21 @@ const
                 })
     },
     verifyHandler = (req, res, next)=>{
-        // console.log(cryptoUtils.verifyJWT)
-        console.log('req.body.token: ', req.body.token);
-        let verifyJWT = cryptoUtils.verifyJWT(req.body.token);
-        verifyJWT.isTokenValid ?
-            res.status(200).send(verifyJWT.body)
-            :
+        const token = req.params.token;
+        console.log('COOKIE', req.cookies.YAPSESSION)
+        // console.log('req.body.token: ', req.body.token);
+        let verifyJWT = cryptoUtils.verifyJWT(token);
+        if (verifyJWT.isTokenValid){
+            res.cookie('YAPSESSION', token);
+            res.status(200).send(verifyJWT.body);
+        } 
+        else 
             res.status(401).send(verifyJWT.body);
     }
 
 
 router.post('/login', loginHandler);
 router.post('/register', registrationHandler);
-router.post('/verify', verifyHandler);
+router.get('/verify/:token', verifyHandler);
 
 module.exports = router;

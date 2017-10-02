@@ -5,8 +5,12 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var index = require('./routes/index');
-var users = require('./routes/users');
+const
+ index = require('./routes/index'),
+ users = require('./routes/users.route'),
+ jobs_route = require('./routes/jobs.route');
+
+//import utilities.
 var cryptoUtil = require('./utils/crypto.utils');
 //database connection
 const db_connection = require('./connection/mongo_connection');
@@ -26,9 +30,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// SETTING UP ROUTES.
 app.use('/', index);
 app.use('/users', users);
-
+app.use('/jobs', jobs_route);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
