@@ -9,9 +9,9 @@ const
         contact: { type: String, trim:true },
         email: { type: String, trim: true },
         created: { type: Date, default: Date.now },
-        password: { type: String, required: false, maxlength: 40 },
-        profile_url: {type: String}, 
-        profile_cover: {type: String} 
+        password: { type: String, required: false },
+        profile_url: { type: String }, 
+        profile_cover: { type: String } 
     }, {collection}),
 
     // EXPERIENCES | PART OF PROFESSIONAL DEATAILS
@@ -31,14 +31,14 @@ const
     }, {_id: false}),
 
     Education = new Schema({
-        level: {type: Status, trim: true },
-        status: { type: Status }
+        level: {type: String, trim: true },
+        status: { type: String }
     }, {_id: false}),
 
     // PROFESSIONAL DETAILS | PART OF JOB SEEKER SCHEMA
     ProfessionalDetails = new Schema({
         skills: [String],
-        preffered_category: {type: String, trim: true, max: max},
+        preffered_category: {type: String, trim: true},
         experiences: [Experiences]
     }),
 
@@ -52,6 +52,6 @@ const
         created: {type: Date, default: Date.now }
     })
 
-    model = mongoose.model('job_seekers',JobSeekerSchema);
+    model = mongoose.model('job_seekers', JobSeeker);
 
 module.exports = model;

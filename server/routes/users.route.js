@@ -35,11 +35,12 @@ const
                 
                     JobSeekerJoint.checkIfUserExists(req.body.email) 
                         .then(record => {
+                            
                             '_id' in record.body ?   
-                                bcrypt.compare(password, record.body.password)
+                                bcrypt.compare(password, record.body.personal_info.password)
                                     .then( passwordMatched => {
                                         if(passwordMatched) {
-                                            let {email, password, _id, contact} = record.body;
+                                            let {email, password, _id, contact} = record.body.personal_info;
                                             console.log(email, _id, contact);
                                             cryptoUtils.assignStandardJWT({email, _id, contact})
                                                 .then(token => {

@@ -14,8 +14,9 @@ class JobSeekerJoint {
             };
 
         return new Promise((resolve, reject) => {
-            JobSeeker.findOne({email: email}, responseParams)
+            JobSeeker.findOne({"personal_info.email": email}, responseParams)
                 .then(body=>{
+                    console.log('body: ', body)
                     '_id' in body ? 
                         resolve({status: 200, body })
                         :
@@ -26,15 +27,21 @@ class JobSeekerJoint {
     }
 
     saveJobSeeker(jobSeekerModel){
-        const jobSeeker = new JobSeeker(jobSeekerModel);
+        const jobSeeker = new JobSeeker({
+            personal_info: jobSeekerModel,
+            professional_details: {},
+            jobs: [],
+            education: {}
+        });
         return new Promise((resolve, reject) => {
-            let saveStudentCb = err=> {
+            let saveJobSeeker = err=> {
+                console.log(err);
                 err ?
                     reject({status: 409, body: "Account Already Exists"})
                     :
                     resolve({status:201, body: "Account Created Successfully"});
             }
-            jobSeeker.save(saveStudentCb);
+            jobSeeker.save(saveJobSeeker);
         });
     }
 
