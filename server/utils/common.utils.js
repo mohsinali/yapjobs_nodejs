@@ -1,7 +1,7 @@
 const 
     mongooseTypes = require('mongoose').Types,
-    jwt = require('jsonwebtoken'),
-    { verifyJWT } = require('./promisify.utils');
+    { verifyJWT } = require('./promisify.utils'),
+    { verifyToken } = require('./crypto.utils');
 
 class CommonUtils {
     isObjectId(id){
@@ -11,17 +11,20 @@ class CommonUtils {
     checkTokenInRequest(){
         return (request, response, next)=>{
             const token = request.cookies.YAPSESSION;
-            verifyJWT(token.toString(), process.env.SECRET_KEY)
-                .then(verified =>{
-                    next();
-                    console.log('is Token Verified: ', verified);
-                })
-                .catch(err => {
-                    if(err.message === 'jwt expired')
-                        response.status(403).send('Token/Session Expired');
-                    else 
-                        response.status(403).send('Oops! Seems like some problem with token');
-                })
+            if(token)
+                verifyToken(token)
+                    .then(verified =>{
+                        next();
+                        console.log('is Token Verified: ', verified);
+                    })
+                    .catch(err => {
+                        if(err.message === 'jwt expired')
+                            response.status(403).send('Token/Session Expired');
+                        else 
+                            response.status(403).send('Oops! Invalid Session');
+                    })
+            else 
+                response.status(403).send('You must login');
         }
     }
 }

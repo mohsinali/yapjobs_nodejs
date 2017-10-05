@@ -1,24 +1,29 @@
 
 const 
-    jwt = require('jsonwebtoken'),
-    {signJWT, verifyJWT} = require('./promisify.utils');
+    // jwt = require('jsonwebtoken').sign(,,{}),
+    { signJWT, verifyJWT } = require('./promisify.utils'),
+    { readFileSync } = require('fs'),
+    { join: joinPath } = require('path'),
+    RSA_PRIVATE_KEY = readFileSync(joinPath(__dirname, '../bin/private.key'), 'utf8'), 
+    RSA_PUBLIC_KEY = readFileSync(joinPath(__dirname, '../bin/public.key'), 'utf8');
 
 class CryptoUtils {
-    constructor(){
+    constructor(){  
         console.log('JOINT TO CRYPTO UTILS MADE...');
     }    
 
-    assignStandardJWT(
-        payload = {},
-        algorithm = process.env.ENC_TYPE,
-        ){
+    assignStandardJWT(payload = {}, algorithm = process.env.ENC_TYPE){
+        console.log("payload: ", payload)
         const claims = {
-            algorithm,
-            expiresIn: 60*60,
-            subject: payload.email || null,
-            jwtid: payload.id || null
+            algorithm: 'RS256',
+            expiresIn: '1h'
         }
-        return signJWT(payload, process.env.SECRET_KEY , claims);
+
+        return signJWT(payload, RSA_PRIVATE_KEY, claims);
+    }
+
+    verifyToken(token){
+        return verifyJWT(token, RSA_PUBLIC_KEY);
     }
     
 }

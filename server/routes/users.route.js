@@ -46,7 +46,7 @@ const
                                                     res.cookie('YAPSESSION', token) ;
                                                     res.status(202).send({token, body: 'Access Granted'});
                                                 }).catch(err=>{
-                                                    //TODO;
+                                                    console.log(err);
                                                 })
                                         }
                                         else 

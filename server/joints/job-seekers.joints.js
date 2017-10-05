@@ -27,8 +27,6 @@ class JobSeekerJoint {
 
     saveJobSeeker(jobSeekerModel){
         const jobSeeker = new JobSeeker(jobSeekerModel);
-        // console.log('job seeker: ', jobSeeker)
-        // console.log('job seeker model: ', jobSeekerModel)
         return new Promise((resolve, reject) => {
             let saveStudentCb = err=> {
                 err ?
