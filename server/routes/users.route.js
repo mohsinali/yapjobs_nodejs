@@ -94,23 +94,10 @@ const
                 }).catch(err=>{
                     throw new Error(err)
                 })
-    },
-    verifyHandler = (req, res, next)=>{
-        const token = req.params.token;
-        console.log('COOKIE', req.cookies.YAPSESSION)
-        // console.log('req.body.token: ', req.body.token);
-        let verifyJWT = cryptoUtils.verifyJWT(token);
-        if (verifyJWT.isTokenValid){
-            res.cookie('YAPSESSION', token);
-            res.status(200).send(verifyJWT.body);
-        } 
-        else 
-            res.status(401).send(verifyJWT.body);
     }
 
 
 router.post('/login', loginHandler);
 router.post('/register', registrationHandler);
-router.get('/verify/:token', verifyHandler);
 
 module.exports = router;

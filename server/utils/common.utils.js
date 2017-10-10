@@ -27,6 +27,16 @@ class CommonUtils {
                 response.status(403).send('You must login');
         }
     }
+
+    commonCallback (resolve, reject){
+        return (err, body)=>{  
+            if(err) 
+                reject({status: 500, body: err}) 
+            if(!err) {
+                resolve({status: 200, body: body && typeof body === 'object' ? body : null });
+            }
+        };
+    }            
 }
 
 module.exports = new CommonUtils();

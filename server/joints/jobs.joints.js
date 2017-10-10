@@ -1,14 +1,6 @@
 const 
     Jobs = require('../models/jobs.model'),
-    commonCallback = (resolve, reject)=>{
-        return (err, body)=>{  
-            if(err) 
-                reject({status: 500, body: err}) 
-            if(!err) {
-                resolve({status: 200, body});
-            }
-        };
-    }
+    { commonCallback } = require('../utils/common.utils');
 
 class JobsJoint {
 

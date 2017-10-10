@@ -39,4 +39,5 @@ const
 
 router.get('/', getJobsHandler);
 router.get('/:job_id', checkTokenInRequest(), getJobById);
+
 module.exports = router;

@@ -1,6 +1,5 @@
 
 const 
-    // jwt = require('jsonwebtoken').sign(,,{}),
     { signJWT, verifyJWT } = require('./promisify.utils'),
     { readFileSync } = require('fs'),
     { join: joinPath } = require('path'),
@@ -10,7 +9,7 @@ const
 class CryptoUtils {
     constructor(){  
         console.log('JOINT TO CRYPTO UTILS MADE...');
-    }    
+    }
 
     assignStandardJWT(payload = {}, algorithm = process.env.ENC_TYPE){
         console.log("payload: ", payload)
