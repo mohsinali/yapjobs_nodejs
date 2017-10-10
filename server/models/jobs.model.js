@@ -1,7 +1,7 @@
 const
     mongoose = require('mongoose'),
     Schema = mongoose.Schema,
-    modelName = '',
+    modelName = 'jobs',
     
     salaryModel = new Schema({
         currency: { type:String, trim: true, maxlength: 20 },

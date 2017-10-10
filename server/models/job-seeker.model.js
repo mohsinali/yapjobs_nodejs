@@ -12,7 +12,7 @@ const
         password: { type: String, required: false },
         profile_url: { type: String }, 
         profile_cover: { type: String } 
-    }, {collection}),
+    }),
 
     // EXPERIENCES | PART OF PROFESSIONAL DEATAILS
     Experiences=  new Schema({
@@ -50,7 +50,7 @@ const
         education: Education,
         location: Object,
         created: {type: Date, default: Date.now }
-    })
+    }, {collection})
 
     model = mongoose.model('job_seekers', JobSeeker);
 

@@ -10,9 +10,15 @@ const cluster = require('cluster'),
     http = require('http');
 
 if(cluster.isMaster){
+    console.log(`\n\n\t\t *** CLUSTERING SERVER ON ${cpuCount} CORES ***`);
+    console.log(`\t\t *** UNLEASHED POWER WITH NODE *** \n\n`);
     for(let i=0; i<cpuCount; i++) cluster.fork();
 
+    cluster.on('online', ()=> {
+        console.log(`=> Spinning up process PID ${process.pid}...`)
+    })
     cluster.on('exit', ()=> {
+        console.log(`=> process with PID ${process.pid} down...`)
         cluster.fork();
     })
 } else {
