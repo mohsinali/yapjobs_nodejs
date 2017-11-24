@@ -25,7 +25,7 @@ class JobsJoint {
 
     save(jobModel){
         const newJob = new Jobs(jobModel);
-        new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             newJob.save( err => {
                 if(err){
                     throw new Error(err);

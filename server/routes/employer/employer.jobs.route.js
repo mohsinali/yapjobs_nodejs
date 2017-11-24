@@ -8,7 +8,7 @@ const
             title = null, category = null, additional_info = '',
             contract = null, salary = null, manager_info = null,
             total_applicants = [], location = {}, invitation_link = null
-        }
+        } = request.body;
 
         let jobModel = {
             title, category, additional_info, contract, 
@@ -17,7 +17,8 @@ const
 
         try {
             const {status, body} = await JobJoint.save(jobModel);
-            res.status(status).send(body);
+            console.log(status, body);
+            response.status(status).send(body);
 
         } catch( e ){
             console.error(e);
