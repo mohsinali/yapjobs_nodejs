@@ -12,7 +12,7 @@ class CryptoUtils {
     }
 
     assignStandardJWT(payload = {}, algorithm = process.env.ENC_TYPE){
-        console.log("payload: ", payload)
+        // console.log("payload: ", payload)
         const claims = {
             algorithm: 'RS256',
             expiresIn: '1h'
