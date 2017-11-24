@@ -15,7 +15,7 @@ const
         })
     },
     loginHandler = (req, res, next)=> {
-        console.log('body: ',req.body);
+        // console.log('body: ',req.body);
         
         // should be handled with complete validators.
         // validator for data varification should be a util (and tested).
@@ -41,11 +41,11 @@ const
                                     .then( passwordMatched => {
                                         if(passwordMatched) {
                                             let {email, password, _id, contact} = record.body.personal_info;
-                                            console.log(email, _id, contact);
+                                            // console.log(email, _id, contact);
                                             cryptoUtils.assignStandardJWT({email, _id, contact})
                                                 .then(token => {
                                                     res.cookie('YAPSESSION', token) ;
-                                                    res.status(202).send({token, body: 'Access Granted'});
+                                                    res.status(202).send({token, body: record.body});
                                                 }).catch(err=>{
                                                     console.log(err);
                                                 })
@@ -67,37 +67,25 @@ const
             }
     },
 
-    registrationHandler = (req, res, next)=> {
+    registrationHandler = async (req, res, next)=> {
         let 
-            fullname = req.body.fullname.trim(), //must contain
-            email = req.body.email.trim(), //must contain
-            contact = req.body.contact, //must contain
-            password = req.body.password; //must contain
-            
-            generateHash(password) // return hash with 10 round salt added
-                .then(hash=> {
-                    console.log(`password-hash ${password}-${hash}`);
-                    const jobSeekerModel = {
-                        fullname, email, contact, password: hash
-                    }
-                    JobSeekerJoint.saveJobSeeker(jobSeekerModel)
-                        .then( result => {
-                            res.status(201).send("User Created");
-                        })
-                        .catch(err=> {
-                            if(err.status == 409)
-                                res.status(409).send(err.body)
-                            else 
-                                res.status(500).send('Unable To Save Job Seeker');
-                        })
-                        
-                }).catch(err=>{
-                    throw new Error(err)
-                })
+            {fullname = null, email = null, contact = null, password = null} = req.body;
+            try{
+                const hash = await generateHash(password) // return hash with 10 round salt added
+                const jobSeekerModel = {
+                    fullname, email, contact, password: hash
+                }
+                const {status, body} = await JobSeekerJoint.saveJobSeeker(jobSeekerModel);
+                res.status(status).send(body);
+
+            } catch( e ){
+                console.error(e);
+                const { status = 500, body = "Some error at registring users" } = e;
+                res.status(status).send(body);
+            }
     }
 
 
 router.post('/login', loginHandler);
 router.post('/register', registrationHandler);
-
 module.exports = router;
