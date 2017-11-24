@@ -8,7 +8,6 @@ const
         fullname: { type: String, trim: true },
         contact: { type: String, trim:true },
         email: { type: String, trim: true },
-        created: { type: Date, default: Date.now },
         password: { type: String, required: false },
         profile_url: { type: String }, 
         profile_cover: { type: String } 
@@ -50,7 +49,7 @@ const
         education: Education,
         location: Object,
         created: {type: Date, default: Date.now }
-    }, {collection})
+    }, {collection}),
 
     model = mongoose.model('job_seekers', JobSeeker);
 

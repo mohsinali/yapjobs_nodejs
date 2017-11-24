@@ -17,7 +17,7 @@ const
         title: {type: String, required: true, maxlength: 50, trim: true },
         category: {type: String, required: true, maxlength: 50 },
         additional_info: { type: String, trim: true },
-        title: {type: String, required: true, maxlength: 50 },
+        // title: {type: String, required: true, maxlength: 50 },
         salary: salaryModel, 
         manager_info: managerModel, 
         total_applicants: [
@@ -29,9 +29,9 @@ const
         location: { type: Object },
         contract: { type: String, trim: true },
         role: { type: String }
-    }),
+    });
 
-    model = mongoose.model(modelName, JobsSchema);
+    const model = mongoose.model(modelName, JobsSchema);
 
 
 module.exports = model;

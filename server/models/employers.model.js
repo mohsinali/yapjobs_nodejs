@@ -1,6 +1,7 @@
 const 
+    mongoose = require('mongoose'),
     Schema = require('mongoose').Schema,
-    Model = require('mongoose').model,
+    // Model = require('mongoose').model,
 
     AccountInfo = new Schema({
         subscription_type: { type: String },
@@ -38,7 +39,6 @@ const
         jobs: Jobs,
         personal_info: PersonalInfo
     }),
-
-    model = Model('employers', EmployersSchema);
+    model = mongoose.model('employers', EmployersSchema);
 
 module.exports = model;

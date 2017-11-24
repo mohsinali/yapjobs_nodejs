@@ -6,9 +6,10 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 const
- index = require('./routes/index'),
- users = require('./routes/users.route'),
- jobs_route = require('./routes/jobs.route');
+  employerRoute = require('./routes/employer/employers.route'),
+  index = require('./routes/index'),
+  users = require('./routes/users.route'),
+  jobsRoute = require('./routes/jobs.route');
 
 //import utilities.
 var cryptoUtil = require('./utils/crypto.utils');
@@ -32,8 +33,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // SETTING UP ROUTES.
 app.use('/', index);
+app.use('/employer', employerRoute);
 app.use('/users', users);
-app.use('/jobs', jobs_route);
+app.use('/jobs', jobsRoute);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
