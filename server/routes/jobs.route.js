@@ -3,41 +3,34 @@ const
     router = express.Router(),
     JobsJoint = require('../joints/jobs.joints'),
     {isObjectId, checkTokenInRequest} = require('../utils/common.utils'),
-    getJobsHandler = (request, response) => {
+    getJobsHandler = async (request, response) => {
         //TODO
         const 
             filters = request.query,
             projection = null;
 
-        JobsJoint.find(filters, projection)
-            .then(res => {
-                let { status, body } = res;
-                response.status(status).send(body);
-            })
-            .catch(err=> {
-                console.log('ERROR AT "FINDING JOBS": ', err);
-                response.status(500).send({msg: 'Error at finding jobs', err: err.body});
-            })
+            const {status, body: jobs} = await JobsJoint.find(filters, projection);
+            response.status(status).send(jobs);
     },
-    getJobById = (request, response)=> {
-        const jobId = request.params.job_id;
+
+    getJobById = async (request, response)=> {
+        const {job_id: jobId} = request.params;
         
-        !isObjectId(jobId) ?
-            response.status(400).send('Invalid Job Id')
-            :
-            JobsJoint.findById(jobId)
-                .then(res=>{
-                    response.status(res.status).send(res.body);
-                })
-                .catch(err=>{
-                    console.log('ERROR AT FINDING JOB BY ID: ', err);
-                    response.status(500).send(err);
-                });
+        if(!isObjectId(jobId)) 
+            response.status(400).send('Invalid Job Id');
+        else 
+            try {
+                const { status, body: job } = await JobsJoint.findById(jobId);
+                response.status(status).send(job);
+            } catch( e ){
+                console.error(e);
+            }
     };
 
 
 
 router.get('/', getJobsHandler);
-router.get('/:job_id', checkTokenInRequest(), getJobById);
+router.get('/:job_id', getJobById);
+// router.get('/:job_id', checkTokenInRequest(), getJobById);
 
 module.exports = router;
