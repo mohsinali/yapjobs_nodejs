@@ -1,19 +1,9 @@
 const 
     express = require('express'),
     router = express.Router(),
-    bcrypt = require('bcrypt'),
-    saltRounds = 10, 
     JobSeekerJoint = require('../joints/job-seekers.joints'),
-    cryptoUtils = require('../utils/crypto.utils'),
-    // promisify = require('util.promisify'),
-    generateHash = (password)=>{
-        console.log(`password about to encrypt: ${password}`);
-        return new Promise((resolve, reject)=>{
-            bcrypt.hash(password, saltRounds)
-                .then(hash => { resolve(hash) })
-                .catch(err => { reject( err ) });
-        })
-    },
+    {assignStandardJWT, generateHash} = require('../utils/crypto.utils'),
+
     loginHandler = (req, res, next)=> {
         // console.log('body: ',req.body);
         
@@ -32,7 +22,7 @@ const
                         res.status(401).send("No Such Account Exists")
                 };
                 // req.body.email ? // check if email exists on http call. 
-                
+
                     JobSeekerJoint.checkIfUserExists(req.body.email) 
                         .then(record => {
                             
@@ -42,7 +32,7 @@ const
                                         if(passwordMatched) {
                                             let {email, password, _id, contact} = record.body.personal_info;
                                             // console.log(email, _id, contact);
-                                            cryptoUtils.assignStandardJWT({email, _id, contact})
+                                            assignStandardJWT({email, _id, contact})
                                                 .then(token => {
                                                     res.cookie('YAPSESSION', token) ;
                                                     res.status(202).send({token, body: record.body});
