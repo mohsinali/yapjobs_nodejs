@@ -28,12 +28,14 @@ class CommonUtils {
         }
     }
 
-    commonCallback (resolve, reject){
+    commonCallback (resolve, reject, messages = {}){
+        let { errmsg = null, successmsg = null} = messages;   
         return (err, body)=>{  
+            console.log(`common call back err: ${err}, message: ${body}`)
             if(err) 
-                reject({status: 500, body: err}) 
+                reject({ status: 500, body: errmsg || err.message }) 
             if(!err) {
-                resolve({status: 200, body: body && typeof body === 'object' ? body : null });
+                resolve({status: 200, body: successmsg || body });
             }
         };
     }            
