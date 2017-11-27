@@ -11,7 +11,7 @@ const
 
             const {status, body: jobs} = await JobsJoint.find(filters, projection);
             response.status(status).send(jobs);
-    },
+    }
 
     operation = (TYPE)=> {
         let operation;

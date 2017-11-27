@@ -1,8 +1,8 @@
 const 
     express = require('express'),
     router = express.Router(),
-    JobJoint = require('../../joints/jobs.joints');
-    
+    JobJoint = require('../../joints/jobs.joints'),
+    // {operation} = require('../jobs.route'),
     addJob = async (request, response) => {
         let {
             title = null, category = null, additional_info = '',
@@ -23,7 +23,14 @@ const
         } catch( e ){
             console.error(e);
         }
-    };
+    }
+    
+    // deleteJob = async (request, response, next) => {
+    //     console.log('checking redirect', request.path);
+    //     // next(`/jobs/`)
+    // };
 
 router.post('/add', addJob);
+// router.delete('/job_id', deleteJob);
+
 module.exports = router;

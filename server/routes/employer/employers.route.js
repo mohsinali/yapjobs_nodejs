@@ -64,6 +64,6 @@ const
 
 router.post('/login', login);
 router.post('/register', register);
+router.use('/jobs',EmployerJobs);
 
-router.use('/jobs',EmployerJobs)
 module.exports = router;
