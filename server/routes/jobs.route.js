@@ -13,24 +13,37 @@ const
             response.status(status).send(jobs);
     },
 
-    getJobById = async (request, response)=> {
-        const {job_id: jobId} = request.params;
-        
-        if(!isObjectId(jobId)) 
-            response.status(400).send('Invalid Job Id');
-        else 
-            try {
-                const { status, body: job } = await JobsJoint.findById(jobId);
-                response.status(status).send(job);
-            } catch( e ){
-                console.error(e);
-            }
+    operation = (TYPE)=> {
+        let operation;
+        switch(TYPE = 'GET'){
+            case 'GET': operation = 'findById'; break;
+            case 'DELETE': operation = 'deleteById'; break;            
+        }
+
+
+        return getJobById = async (request, response)=> {
+            const {job_id: jobId} = request.params;
+            
+            if(!isObjectId(jobId)) 
+                response.status(400).send('Invalid Job Id');
+            else 
+                try {
+                    const { status, body: job } = await JobsJoint[operation](jobId);
+                    response.status(status).send(job);
+                } catch( e ){
+                    console.error(e);
+                }
+        };
     };
 
 
 
+
 router.get('/', getJobsHandler);
-router.get('/:job_id', getJobById);
+router.route('/:job_id')
+    .get(operation('GET'))
+    .delete(operation('DELETE'));
+    // .patch();
 // router.get('/:job_id', checkTokenInRequest(), getJobById);
 
 module.exports = router;

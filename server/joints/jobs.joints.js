@@ -23,16 +23,21 @@ class JobsJoint {
         });
     }
 
+    deleteById(id) {
+        console.log(`delete call for job_id: ${id}`);
+        return new Promise((resolve, reject) => {
+           Jobs.findByIdAndRemove(id, commonCallback(resolve, reject, {successmsg: 'Job Deleted'}));
+        });
+    }
+
     save(jobModel){
         const newJob = new Jobs(jobModel);
+        let options = {
+            successmsg: 'Job Added',
+            errmsg: "Unable to save job",
+        }
         return new Promise((resolve, reject) => {
-            newJob.save( err => {
-                if(err){
-                    throw new Error(err);
-                    reject({status: 400, body: "Unable to save Job"});
-                }
-                resolve({status: 200, body: "Job Added"});                
-            })
+            newJob.save(commonCallback(resolve, reject, options))
         });
     }
 
